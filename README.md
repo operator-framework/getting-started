@@ -1,8 +1,6 @@
-This project is a component of the [Operator Framework](https://github.com/operator-framework), an open source toolkit to manage Kubernetes native applications, called Operators, in an effective, automated, and scalable way. Read more in the [introduction blog post](https://coreos.com/blog/introducing-operator-framework).
-
 # Getting Started
 
-The Operator Framework ([intro blog post][blog_post]) is an open source toolkit to manage Kubernetes native applications, called Operators, in an effective, automated, and scalable way. Operators take advantage of Kubernetes's extensibility to deliver the automation advantages of cloud services like provisioning, scaling, and backup/restore while being able to run anywhere that Kubernetes can run.
+The [Operator Framework](https://github.com/operator-framework/) ([intro blog post][blog_post]) is an open source toolkit to manage Kubernetes native applications, called Operators, in an effective, automated, and scalable way. Operators take advantage of Kubernetes's extensibility to deliver the automation advantages of cloud services like provisioning, scaling, and backup/restore while being able to run anywhere that Kubernetes can run.
 
 This guide shows how to build a simple Memcached Operator and how to manage its lifecycle from install to update to a new version. For that, we will use two center pieces of the framework:
 * **Operator SDK**: Allows your developers to build an Operator based on your expertise without requiring knowledge of Kubernetes API complexities.
