@@ -111,7 +111,7 @@ $ kubectl delete -f deploy/rbac.yaml
 ```
 ## Manage the Operator using the Operator Lifecycle Manager
 
-The previous section has covered manually running an Operator. In the next sections, we will explore using the Operator Lifecycle Manager which is what enables a more robust deployment model for Operators being ran in production environments.
+The previous section has covered manually running an Operator. In the next sections, we will explore using the Operator Lifecycle Manager which is what enables a more robust deployment model for Operators being run in production environments.
 
 The Operator Lifecycle Manager helps you to install, update, and generally manage the lifecycle of all of the Operators (and their associated services) on a Kubernetes cluster. It runs as an Kubernetes extension and lets you use `kubectl` for all the lifecycle management functions without any additional tools.
 
@@ -131,7 +131,7 @@ $ kubectl apply -f memcachedoperator.0.0.1.csv.yaml
 $ kubectl get ClusterServiceVersion-v1s memcachedoperator.v0.0.1 -o json | jq '.status'
 ```
 
-After applying this manifest, nothing has happened yet, because the cluster does not met the requirements specified in our manifest. Create the CustomResourceDefinition and RBAC rules for the Memcached type managed by the Operator:
+After applying this manifest, nothing has happened yet, because the cluster does not meet the requirements specified in our manifest. Create the CustomResourceDefinition and RBAC rules for the Memcached type managed by the Operator:
 
 ```sh
 $ kubectl apply -f deploy/rbac.yaml
