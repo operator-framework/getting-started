@@ -65,6 +65,8 @@ type MemcachedStatus struct {
 Update the generated code for the CR:
 
 ```sh
+$ cd $GOPATH/src/github.com/example-inc/
+$ cd memcached-operator
 $ operator-sdk generate k8s
 ```
 
