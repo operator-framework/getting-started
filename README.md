@@ -176,7 +176,7 @@ memcached-for-wordpress-65b75fd8c9-7b9x7   1/1       Running   0          8s
 
 ### Update an application
 
-Manually applying an update to the Operator is as simple as editing the initially applied Operator manifest and applying it to the cluster. The Operator Lifecycle Manager will ensure that all resources being managed by the old Operator have their ownership moved to the new Operator without fear of any programs stopping execution. It is up to the Operators themselves to execute any data migrations required to upgrade resources to run under a new version of the Operator.
+Manually applying an update to the Operator is as simple as creating a new Operator manifest with a `replaces` field that references the old Operator manifest. The Operator Lifecycle Manager will ensure that all resources being managed by the old Operator have their ownership moved to the new Operator without fear of any programs stopping execution. It is up to the Operators themselves to execute any data migrations required to upgrade resources to run under a new version of the Operator.
 
 The following command demonstrates applying a new Operator manifest using a new version of the Operator and shows that the pods remain executing:
 
