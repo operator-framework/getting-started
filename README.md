@@ -96,6 +96,7 @@ Deploy the Memcached Operator:
 
 ```sh
 $ kubectl create -f deploy/rbac.yaml
+$ kubectl create -f deploy/crd.yaml
 $ kubectl create -f deploy/operator.yaml
 ```
 
