@@ -6,7 +6,7 @@ This guide shows how to build a simple Memcached Operator and how to manage its 
 * **Operator SDK**: Allows your developers to build an Operator based on your expertise without requiring knowledge of Kubernetes API complexities.
 * **Operator Lifecycle Manager**: Helps you to install, update, and generally manage the lifecycle of all of the Operators (and their associated services) running across your clusters.
 
-> **Requirements**: Please make sure that the [Operator SDK][operator_sdk] is installed on the development machine. Additionally, the [Operator Lifecycle Manager][operator_lifecycle_manager] must be installed in the cluster before running this guide.
+> **Requirements**: Please make sure that the [Operator SDK][operator_sdk] is installed on the development machine. Additionally, the [Operator Lifecycle Manager][operator_lifecycle_manager] must be installed in the cluster (1.8 or above to support the apps/v1beta2 API group) before running this guide.
 
 ## Build an Operator using the Operator SDK
 
