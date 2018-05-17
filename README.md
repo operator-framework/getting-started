@@ -6,7 +6,7 @@ This guide shows how to build a simple Memcached Operator and how to manage its 
 * **Operator SDK**: Allows your developers to build an Operator based on your expertise without requiring knowledge of Kubernetes API complexities.
 * **Operator Lifecycle Manager**: Helps you to install, update, and generally manage the lifecycle of all of the Operators (and their associated services) running across your clusters.
 
-> **Requirements**: Please make sure that both the [Operator SDK][operator_sdk] and [Operator Lifecycle Manager][operator_lifecycle_manager] are installed before running this guide. The guide also requires deployment to a Kubernetes cluster on release 1.8 or above to support the apps/v1beta2 API group and version.
+> **Requirements**: Please make sure that the [Operator SDK][operator_sdk] is installed on the development machine. Additionally, the [Operator Lifecycle Manager][operator_lifecycle_manager] must be installed in the cluster (1.8 or above to support the apps/v1beta2 API group) before running this guide.
 
 ## Build an Operator using the Operator SDK
 
@@ -111,7 +111,7 @@ $ kubectl delete -f deploy/rbac.yaml
 ```
 ## Manage the Operator using the Operator Lifecycle Manager
 
-The previous section has covered manually running an Operator. In the next sections, we will explore using the Operator Lifecycle Manager which is what enables a more robust deployment model for Operators being ran in production environments.
+The previous section has covered manually running an Operator. In the next sections, we will explore using the Operator Lifecycle Manager which is what enables a more robust deployment model for Operators being run in production environments.
 
 The Operator Lifecycle Manager helps you to install, update, and generally manage the lifecycle of all of the Operators (and their associated services) on a Kubernetes cluster. It runs as an Kubernetes extension and lets you use `kubectl` for all the lifecycle management functions without any additional tools.
 
@@ -119,7 +119,7 @@ The Operator Lifecycle Manager helps you to install, update, and generally manag
 
 The first step to leveraging the Operator Lifecycle Manager is to create a manifest. An Operator manifest describes how to display, create and manage the application, in this case Memcached, as a whole. It is required for the Operator Lifecycle Manager to function.
 
-For the purpose of this guide, we will continue with this predefined manifest file for the next steps. If you’d like, you can alter the image field within this manifest to reflect the image you built in previous steps, but it is unnecessary. In the future, the Operator SDK CLI will generate an Operator manifest for you, a feature that is planned for the next release of the Operator SDK.
+For the purpose of this guide, we will continue with this [predefined manifest][manifest_v1] file for the next steps. If you’d like, you can alter the image field within this manifest to reflect the image you built in previous steps, but it is unnecessary. In the future, the Operator SDK CLI will generate an Operator manifest for you, a feature that is planned for the next release of the Operator SDK.
 
 ### Deploy the Operator 
 
@@ -131,7 +131,7 @@ $ kubectl apply -f memcachedoperator.0.0.1.csv.yaml
 $ kubectl get ClusterServiceVersion-v1s memcachedoperator.v0.0.1 -o json | jq '.status'
 ```
 
-After applying this manifest, nothing has happened yet, because the cluster does not met the requirements specified in our manifest. Create the CustomResourceDefinition and RBAC rules for the Memcached type managed by the Operator:
+After applying this manifest, nothing has happened yet, because the cluster does not meet the requirements specified in our manifest. Create the CustomResourceDefinition and RBAC rules for the Memcached type managed by the Operator:
 
 ```sh
 $ kubectl apply -f deploy/rbac.yaml
@@ -176,9 +176,9 @@ memcached-for-wordpress-65b75fd8c9-7b9x7   1/1       Running   0          8s
 
 ### Update an application
 
-Manually applying an update to the Operator is as simple as editing the initially applied Operator manifest and applying it to the cluster. The Operator Lifecycle Manager will ensure that all resources being managed by the old Operator have their ownership moved to the new Operator without fear of any programs stopping execution. It is up to the Operators themselves to execute any data migrations required to upgrade resources to run under a new version of the Operator.
+Manually applying an update to the Operator is as simple as creating a new Operator manifest with a `replaces` field that references the old Operator manifest. The Operator Lifecycle Manager will ensure that all resources being managed by the old Operator have their ownership moved to the new Operator without fear of any programs stopping execution. It is up to the Operators themselves to execute any data migrations required to upgrade resources to run under a new version of the Operator.
 
-The following command demonstrates applying a new Operator manifest using a new version of the Operator and shows that the pods remain executing:
+The following command demonstrates applying a new [manifest_v2][Operator manifest] using a new version of the Operator and shows that the pods remain executing:
 
 ```sh
 $ curl -Lo memcachedoperator.0.0.2.csv.yaml https://raw.githubusercontent.com/operator-framework/getting-started/master/memcachedoperator.0.0.2.csv.yaml
@@ -204,4 +204,6 @@ Hopefully, this guide was an effective demonstration of the value of the Operato
 [kubernetes_cr]: https://kubernetes.io/docs/concepts/api-extension/custom-resources/
 [handler_go]: https://github.com/operator-framework/getting-started/blob/master/handler.go.tmpl#L7
 [create_public_image]: https://quay.io/new/
+[manifest_v1]: memcachedoperator.0.0.1.csv.yaml
+[manifest_v2]: memcachedoperator.0.0.2.csv.yaml
 [mailing_list]: https://groups.google.com/forum/#!forum/operator-framework
