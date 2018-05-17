@@ -119,7 +119,7 @@ The Operator Lifecycle Manager helps you to install, update, and generally manag
 
 The first step to leveraging the Operator Lifecycle Manager is to create a manifest. An Operator manifest describes how to display, create and manage the application, in this case Memcached, as a whole. It is required for the Operator Lifecycle Manager to function.
 
-For the purpose of this guide, we will continue with this predefined manifest file for the next steps. If you’d like, you can alter the image field within this manifest to reflect the image you built in previous steps, but it is unnecessary. In the future, the Operator SDK CLI will generate an Operator manifest for you, a feature that is planned for the next release of the Operator SDK.
+For the purpose of this guide, we will continue with this [predefined manifest][manifest_v1] file for the next steps. If you’d like, you can alter the image field within this manifest to reflect the image you built in previous steps, but it is unnecessary. In the future, the Operator SDK CLI will generate an Operator manifest for you, a feature that is planned for the next release of the Operator SDK.
 
 ### Deploy the Operator 
 
@@ -178,7 +178,7 @@ memcached-for-wordpress-65b75fd8c9-7b9x7   1/1       Running   0          8s
 
 Manually applying an update to the Operator is as simple as creating a new Operator manifest with a `replaces` field that references the old Operator manifest. The Operator Lifecycle Manager will ensure that all resources being managed by the old Operator have their ownership moved to the new Operator without fear of any programs stopping execution. It is up to the Operators themselves to execute any data migrations required to upgrade resources to run under a new version of the Operator.
 
-The following command demonstrates applying a new Operator manifest using a new version of the Operator and shows that the pods remain executing:
+The following command demonstrates applying a new [manifest_v2][Operator manifest] using a new version of the Operator and shows that the pods remain executing:
 
 ```sh
 $ curl -Lo memcachedoperator.0.0.2.csv.yaml https://raw.githubusercontent.com/operator-framework/getting-started/master/memcachedoperator.0.0.2.csv.yaml
@@ -204,4 +204,6 @@ Hopefully, this guide was an effective demonstration of the value of the Operato
 [kubernetes_cr]: https://kubernetes.io/docs/concepts/api-extension/custom-resources/
 [handler_go]: https://github.com/operator-framework/getting-started/blob/master/handler.go.tmpl#L7
 [create_public_image]: https://quay.io/new/
+[manifest_v1]: memcachedoperator.0.0.1.csv.yaml
+[manifest_v2]: memcachedoperator.0.0.2.csv.yaml
 [mailing_list]: https://groups.google.com/forum/#!forum/operator-framework
