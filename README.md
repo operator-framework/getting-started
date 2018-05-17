@@ -65,6 +65,8 @@ type MemcachedStatus struct {
 Update the generated code for the CR:
 
 ```sh
+$ cd $GOPATH/src/github.com/example-inc/
+$ cd memcached-operator
 $ operator-sdk generate k8s
 ```
 
@@ -82,6 +84,8 @@ Build the `memcached-operator` image and push it to a registry. Please make sure
 
 
 ```sh
+$ cd $GOPATH/src/github.com/example-inc/
+$ cd memcached-operator
 $ operator-sdk build quay.io/example/memcached-operator:v0.0.1
 $ docker push quay.io/example/memcached-operator:v0.0.1
 ```
