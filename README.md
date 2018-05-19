@@ -126,7 +126,7 @@ The first step to leveraging the Operator Lifecycle Manager is to create a manif
 
 For the purpose of this guide, we will continue with this [predefined manifest][manifest_v1] file for the next steps. If you’d like, you can alter the image field within this manifest to reflect the image you built in previous steps, but it is unnecessary. In the future, the Operator SDK CLI will generate an Operator manifest for you, a feature that is planned for the next release of the Operator SDK.
 
-### Deploy the Operator 
+### Deploy the Operator
 
 Deploying an Operator is as simple as applying the Operator’s manifest to the desired namespace in the cluster.
 
@@ -140,16 +140,16 @@ After applying this manifest, nothing has happened yet, because the cluster does
 
 ```sh
 $ kubectl apply -f deploy/rbac.yaml
-$ sed '/---/q' deploy/operator.yaml | kubectl apply -f -
+$ kubectl apply -f deploy/operator.yaml
 ```
 
-Because the Operator Lifecycle Manager creates Operators in a particular namespace when a manifest has been applied, administrators can leverage the native Kubernetes RBAC permission model to restrict which users are allowed to install Operators. 
+Because the Operator Lifecycle Manager creates Operators in a particular namespace when a manifest has been applied, administrators can leverage the native Kubernetes RBAC permission model to restrict which users are allowed to install Operators.
 
-### Create an application instance 
+### Create an application instance
 
-The Memcached Operator is now running in the `memcached` namespace. Users interact with Operators via instances of CustomResources; in this case, the resource has the Kind `Memcached`. Native Kubernetes RBAC also applies to CustomResources, providing administrators control over who can interact with each Operator. 
+The Memcached Operator is now running in the `memcached` namespace. Users interact with Operators via instances of CustomResources; in this case, the resource has the Kind `Memcached`. Native Kubernetes RBAC also applies to CustomResources, providing administrators control over who can interact with each Operator.
 
-Creating instances of Memcached in this namespace will now trigger the Memcached Operator to instantiate pods running the memcached server that are managed by the Operator. The more CustomResources you create, the more unique instances of Memcached will be managed by the Memcached Operator running in this namespace. 
+Creating instances of Memcached in this namespace will now trigger the Memcached Operator to instantiate pods running the memcached server that are managed by the Operator. The more CustomResources you create, the more unique instances of Memcached will be managed by the Memcached Operator running in this namespace.
 
 ```sh
 $ cat <<EOF | kubectl apply -f -
@@ -183,7 +183,7 @@ memcached-for-wordpress-65b75fd8c9-7b9x7   1/1       Running   0          8s
 
 Manually applying an update to the Operator is as simple as creating a new Operator manifest with a `replaces` field that references the old Operator manifest. The Operator Lifecycle Manager will ensure that all resources being managed by the old Operator have their ownership moved to the new Operator without fear of any programs stopping execution. It is up to the Operators themselves to execute any data migrations required to upgrade resources to run under a new version of the Operator.
 
-The following command demonstrates applying a new [manifest_v2][Operator manifest] using a new version of the Operator and shows that the pods remain executing:
+The following command demonstrates applying a new [Operator manifest][manifest_v2] using a new version of the Operator and shows that the pods remain executing:
 
 ```sh
 $ curl -Lo memcachedoperator.0.0.2.csv.yaml https://raw.githubusercontent.com/operator-framework/getting-started/master/memcachedoperator.0.0.2.csv.yaml
