@@ -207,7 +207,7 @@ Hopefully, this guide was an effective demonstration of the value of the Operato
 [layout_doc]: https://github.com/operator-framework/operator-sdk/blob/master/doc/project_layout.md
 [quay_io]: https://www.quay.io
 [kubernetes_cr]: https://kubernetes.io/docs/concepts/api-extension/custom-resources/
-[handler_go]: https://github.com/operator-framework/getting-started/blob/master/handler.go.tmpl#L7
+[handler_go]: https://github.com/operator-framework/getting-started/blob/master/handler.go.tmpl#L8
 [create_public_image]: https://quay.io/new/
 [manifest_v1]: memcachedoperator.0.0.1.csv.yaml
 [manifest_v2]: memcachedoperator.0.0.2.csv.yaml
