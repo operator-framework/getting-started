@@ -1,8 +1,8 @@
 # This file defines the ClusterServiceVersion (CSV) to tell the catalog how to display, create and
 # manage the application as a whole. If changes are made to the CRD for this application kind,
 # make sure to replace those references below as well.
-apiVersion: app.coreos.com/v1alpha1
-kind: ClusterServiceVersion-v1
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
 metadata:
   name: memcachedoperator.v0.0.2
   namespace: default
