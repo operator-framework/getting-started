@@ -133,7 +133,7 @@ Deploying an Operator is as simple as applying the Operator’s manifest to the 
 ```sh
 $ curl -Lo memcachedoperator.0.0.1.csv.yaml https://raw.githubusercontent.com/operator-framework/getting-started/master/memcachedoperator.0.0.1.csv.yaml
 $ kubectl apply -f memcachedoperator.0.0.1.csv.yaml
-$ kubectl get ClusterServiceVersion-v1s memcachedoperator.v0.0.1 -o json | jq '.status'
+$ kubectl get ClusterServiceVersion memcachedoperator.v0.0.1 -o json | jq '.status'
 ```
 
 After applying this manifest, nothing has happened yet, because the cluster does not meet the requirements specified in our manifest. Create the CustomResourceDefinition and RBAC rules for the Memcached type managed by the Operator:
