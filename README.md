@@ -140,7 +140,7 @@ After applying this manifest, nothing has happened yet, because the cluster does
 
 ```sh
 $ kubectl apply -f deploy/rbac.yaml
-$ kubectl apply -f deploy/operator.yaml
+$ kubectl apply -f deploy/crd.yaml
 ```
 
 Because the Operator Lifecycle Manager creates Operators in a particular namespace when a manifest has been applied, administrators can leverage the native Kubernetes RBAC permission model to restrict which users are allowed to install Operators.
