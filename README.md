@@ -95,6 +95,7 @@ Kubernetes deployment manifests are generated in `deploy/operator.yaml`. The dep
 Deploy the Memcached Operator:
 
 ```sh
+$ kubectl create -f deploy/sa.yaml
 $ kubectl create -f deploy/rbac.yaml
 $ kubectl create -f deploy/crd.yaml
 $ kubectl create -f deploy/operator.yaml
@@ -112,7 +113,9 @@ Now let’s clean everything up:
 
 ```sh
 $ kubectl delete -f deploy/operator.yaml
+$ kubectl delete -f deploy/crd.yaml
 $ kubectl delete -f deploy/rbac.yaml
+$ kubectl delete -f deploy/sa.yaml
 ```
 ## Manage the Operator using the Operator Lifecycle Manager
 
