@@ -5,9 +5,7 @@ The [Operator Framework][org_operator_framework] ([intro blog post][site_blog_po
 This guide shows how to build a simple [memcached][site_memcached] operator and how to manage its lifecycle from install to update to a new version. For that, we will use two center pieces of the framework:
 
 * **Operator SDK**: Allows your developers to build an operator based on your expertise without requiring knowledge of Kubernetes API complexities.
-* **o Lifecycle Manager**: Helps you to install, update, and generally manage the lifecycle of all of the operators (and their associated services) running across your clusters.
-
-> **Requirements**: Please make sure that the [Operator SDK][operator_sdk] is installed on the development machine. Additionally, the [Operator Lifecycle Manager][operator_lifecycle_manager] must be installed in the cluster (1.8 or above to support the apps/v1beta2 API group) before running this guide.
+* **Lifecycle Manager**: Helps you to install, update, and generally manage the lifecycle of all of the operators (and their associated services) running across your clusters.
 
 ## Build an operator using the Operator SDK
 
@@ -15,11 +13,12 @@ The Operator SDK makes it easier to build Kubernetes native applications, a proc
 
 This section walks through an example of building a simple memcached operator using tools and libraries provided by the Operator SDK. This walkthrough is not exhaustive; for an in-depth explanation of these steps, see the SDK's [user guide][doc_sdk_user_guide].
 
+**Requirements**: Please make sure that the Operator SDK is [installed][doc_sdk_install_instr] on the development machine. Additionally, the Operator Lifecycle Manager must be [installed][doc_olm_install_instr] in the cluster (1.8 or above to support the apps/v1beta2 API group) before running this guide.
+
 ### Create a new project
 
-If you do not have the SDK installed, see the [installation instructions][doc_sdk_install_instr].
-
 Use the CLI to create a new `memcached-operator` project:
+
 
 ```sh
 $ mkdir -p $GOPATH/src/github.com/example-inc/
@@ -393,13 +392,14 @@ Hopefully, this guide was an effective demonstration of the value of the Operato
 [site_memcached]: https://memcached.org/
 [doc_sdk_user_guide]: https://github.com/operator-framework/operator-sdk/blob/master/doc/user-guide.md
 [doc_sdk_install_instr]: https://github.com/operator-framework/operator-sdk/blob/master/doc/user-guide.md#install-the-operator-sdk-cli
+[doc_olm_install_instr]: https://github.com/operator-framework/operator-lifecycle-manager/blob/master/Documentation/install/install.md
 [layout_doc]: https://github.com/operator-framework/operator-sdk/blob/master/doc/project_layout.md
 [manager_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg/manager#Manager
 [controller_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg#hdr-Controller
 [request_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg/reconcile#Request
 [result_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg/reconcile#Result
 [doc_client_api]: https://github.com/operator-framework/operator-sdk/blob/master/doc/user/client.md
-[repo_sdk_samples_memcached]: https://github.com/operator-framework/operator-sdk-samples/memcached-operator/
+[repo_sdk_samples_memcached]: https://github.com/operator-framework/operator-sdk-samples/tree/master/memcached-operator/
 [manifest_v1]: memcachedoperator.0.0.1.csv.yaml
 [manifest_v2]: memcachedoperator.0.0.2.csv.yaml
 [mailing_list]: https://groups.google.com/forum/#!forum/operator-framework
