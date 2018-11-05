@@ -167,6 +167,8 @@ Build the memcached-operator image and push it to a registry:
 ```sh
 $ operator-sdk build quay.io/example/memcached-operator:v0.0.1
 $ sed -i 's|REPLACE_IMAGE|quay.io/example/memcached-operator:v0.0.1|g' deploy/operator.yaml
+# On OSX use:
+$ sed -i "" 's|REPLACE_IMAGE|quay.io/example/memcached-operator:v0.0.1|g' deploy/operator.yaml
 $ docker push quay.io/example/memcached-operator:v0.0.1
 ```
 
