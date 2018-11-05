@@ -1,6 +1,6 @@
 # Getting Started
 
-The [Operator Framework][org_operator_framework] ([intro blog post][site_blog_post]) is an open source toolkit to manage Kubernetes native applications, called operators, in an effective, automated, and scalable way. operators take advantage of Kubernetes's extensibility to deliver the automation advantages of cloud services like provisioning, scaling, and backup/restore while being able to run anywhere that Kubernetes can run.
+The [Operator Framework][org_operator_framework] ([intro blog post][site_blog_post]) is an open source toolkit to manage Kubernetes native applications, called operators, in an effective, automated, and scalable way. Operators take advantage of Kubernetes's extensibility to deliver the automation advantages of cloud services like provisioning, scaling, and backup/restore while being able to run anywhere that Kubernetes can run.
 
 This guide shows how to build a simple [memcached][site_memcached] operator and how to manage its lifecycle from install to update to a new version. For that, we will use two center pieces of the framework:
 
