@@ -1,0 +1,7 @@
+language: bash
+
+script: ./hack/ci/marker
+
+after_success: echo 'Markdown links are correct'
+after_failure: echo 'Incorrect markdown link detected'
+
