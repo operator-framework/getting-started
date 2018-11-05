@@ -41,7 +41,7 @@ Learn more about the project directory structure from the SDK [project layout][l
 
 #### Define the Memcached spec and status
 
-Modify the spec and status of the `Memcached` Custom Resource(CR) at `pkg/apis/cache/v1alpha1/memcached_types.go`:
+Modify the spec and status of the `Memcached` Custom Resource (CR) at `pkg/apis/cache/v1alpha1/memcached_types.go`:
 
 ```Go
 type MemcachedSpec struct {
