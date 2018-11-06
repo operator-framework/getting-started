@@ -398,6 +398,7 @@ Hopefully, this guide was an effective demonstration of the value of the Operato
 [layout_doc]: https://github.com/operator-framework/operator-sdk/blob/master/doc/project_layout.md
 [manager_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg/manager#Manager
 [controller_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg#hdr-Controller
+[memcached_controller]: https://github.com/operator-framework/operator-sdk/blob/master/example/memcached-operator/memcached_controller.go.tmpl
 [request_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg/reconcile#Request
 [result_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg/reconcile#Result
 [doc_client_api]: https://github.com/operator-framework/operator-sdk/blob/master/doc/user/client.md
