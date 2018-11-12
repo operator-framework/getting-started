@@ -39,27 +39,6 @@ This creates the `memcached-operator` project.
 
 Learn more about the project directory structure from the SDK [project layout][layout_doc] documentation.
 
-#### Define the Memcached spec and status
-
-Modify the spec and status of the `Memcached` Custom Resource (CR) at `pkg/apis/cache/v1alpha1/memcached_types.go`:
-
-```Go
-type MemcachedSpec struct {
-    // Size is the size of the memcached deployment
-    Size int32 `json:"size"`
-}
-type MemcachedStatus struct {
-    // Nodes are the names of the memcached pods
-    Nodes []string `json:"nodes"`
-}
-```
-
-After modifying the `*_types.go` file always run the following command to update the generated code for that resource type:
-
-```sh
-$ operator-sdk generate k8s
-```
-
 ### Manager
 
 The main program for the operator `cmd/manager/main.go` initializes and runs the [Manager][manager_go_doc].
@@ -87,6 +66,27 @@ $ operator-sdk add api --api-version=cache.example.com/v1alpha1 --kind=Memcached
 ```
 
 This will scaffold the `Memcached` resource API under `pkg/apis/cache/v1alpha1/...`.
+
+### Define the Memcached spec and status
+
+Modify the spec and status of the `Memcached` Custom Resource (CR) at `pkg/apis/cache/v1alpha1/memcached_types.go`:
+
+```Go
+type MemcachedSpec struct {
+    // Size is the size of the memcached deployment
+    Size int32 `json:"size"`
+}
+type MemcachedStatus struct {
+    // Nodes are the names of the memcached pods
+    Nodes []string `json:"nodes"`
+}
+```
+
+After modifying the `*_types.go` file always run the following command to update the generated code for that resource type:
+
+```sh
+$ operator-sdk generate k8s
+```
 
 ## Add a new Controller
 
