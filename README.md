@@ -302,19 +302,28 @@ The above walkthrough follows the actual implementation process used to produce 
 
 ## Manage the operator using the Operator Lifecycle Manager
 
-The previous section has covered manually running an operator. In the next sections, we will explore using the operator Lifecycle Manager which is what enables a more robust deployment model for operators being run in production environments.
+The previous section has covered manually running an operator. In the next sections, we will explore using the [Operator Lifecycle Manager][operator_lifecycle_manager] (OLM) which is what enables a more robust deployment model for operators being run in production environments.
 
-The Operator Lifecycle Manager helps you to install, update, and generally manage the lifecycle of all of the operators (and their associated services) on a Kubernetes cluster. It runs as an Kubernetes extension and lets you use `kubectl` for all the lifecycle management functions without any additional tools.
+OLM helps you to install, update, and generally manage the lifecycle of all of the operators (and their associated services) on a Kubernetes cluster. It runs as an Kubernetes extension and lets you use `kubectl` for all the lifecycle management functions without any additional tools.
+
+
 
 ### Generate an operator manifest
 
-The first step to leveraging the Operator Lifecycle Manager is to create a manifest. An operator manifest describes how to display, create and manage the application, in this case memcached, as a whole. It is required for the Operator Lifecycle Manager to function.
+The first step to leveraging OLM is to create a [Cluster Service Version][csv_design_doc] (CSV) manifest. An operator manifest describes how to display, create and manage the application, in this case memcached, as a whole. It is required for OLM to function.
 
-For the purpose of this guide, we will continue with this [predefined manifest][manifest_v1] file for the next steps. If you’d like, you can alter the image field within this manifest to reflect the image you built in previous steps, but it is unnecessary. In the future, the Operator SDK CLI will generate an operator manifest for you, a feature that is planned for the next release of the Operator SDK.
+The Operator SDK CLI can generate CSV manifests via the following command:
+```console
+$ operator-sdk olm-catalog gen-csv --csv-version 0.0.1
+```
+For more details see the SDK's [CSV generation doc][csv_generation_doc].
+
+
+For the purpose of this guide, we will continue with this [predefined manifest][manifest_v1] file for the next steps. If you’d like, you can alter the image field within this manifest to reflect the image you built in previous steps, but it is unnecessary.
 
 ### Deploy the Operator
 
-Deploying an operator is as simple as applying the operator’s manifest to the desired namespace in the cluster.
+Deploying an operator is as simple as applying the operator’s CSV manifest to the desired namespace in the cluster.
 
 ```sh
 $ curl -Lo memcachedoperator.0.0.1.csv.yaml https://raw.githubusercontent.com/operator-framework/getting-started/master/memcachedoperator.0.0.1.csv.yaml
@@ -325,11 +334,13 @@ $ kubectl get ClusterServiceVersion memcachedoperator.v0.0.1 -o json | jq '.stat
 After applying this manifest, nothing has happened yet, because the cluster does not meet the requirements specified in our manifest. Create the CustomResourceDefinition and RBAC rules for the `Memcached` type managed by the operator:
 
 ```sh
-$ kubectl apply -f deploy/rbac.yaml
-$ kubectl apply -f deploy/crd.yaml
+$ kubectl create -f deploy/crds/cache_v1alpha1_memcached_crd.yaml
+$ kubectl create -f deploy/service_account.yaml
+$ kubectl create -f deploy/role.yaml
+$ kubectl create -f deploy/role_binding.yaml
 ```
 
-Because the Operator Lifecycle Manager creates operators in a particular namespace when a manifest has been applied, administrators can leverage the native Kubernetes RBAC permission model to restrict which users are allowed to install operators.
+Because OLM creates operators in a particular namespace when a manifest has been applied, administrators can leverage the native Kubernetes RBAC permission model to restrict which users are allowed to install operators.
 
 ### Create an application instance
 
@@ -367,7 +378,7 @@ memcached-for-wordpress-65b75fd8c9-7b9x7   1/1       Running   0          8s
 
 ### Update an application
 
-Manually applying an update to the operator is as simple as creating a new operator manifest with a `replaces` field that references the old operator manifest. The Operator Lifecycle Manager will ensure that all resources being managed by the old operator have their ownership moved to the new operator without fear of any programs stopping execution. It is up to the operators themselves to execute any data migrations required to upgrade resources to run under a new version of the operator.
+Manually applying an update to the operator is as simple as creating a new operator manifest with a `replaces` field that references the old operator manifest. OLM will ensure that all resources being managed by the old operator have their ownership moved to the new operator without fear of any programs stopping execution. It is up to the operators themselves to execute any data migrations required to upgrade resources to run under a new version of the operator.
 
 The following command demonstrates applying a new [operator manifest][manifest_v2] using a new version of the operator and shows that the pods remain executing:
 
@@ -387,6 +398,8 @@ Hopefully, this guide was an effective demonstration of the value of the Operato
 
 <!---  Reference URLs begin here -->
 
+[csv_design_doc]: https://github.com/operator-framework/operator-lifecycle-manager/blob/master/Documentation/design/building-your-csv.md
+[csv_generation_doc]: https://github.com/operator-framework/operator-sdk/blob/master/doc/user/olm-catalog/generating-a-csv.md
 [org_operator_framework]: https://github.com/operator-framework/
 [site_blog_post]: https://coreos.com/blog/introducing-operator-framework
 [operator_sdk]: https://github.com/operator-framework/operator-sdk
