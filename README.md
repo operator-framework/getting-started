@@ -296,6 +296,18 @@ NAME                 DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
 example-memcached    4         4         4            4           5m
 ```
 
+### Cleanup
+
+Delete the operator and its related resources:
+
+```sh
+$ kubectl delete -f deploy/crds/cache_v1alpha1_memcached_cr.yaml
+$ kubectl delete -f deploy/operator.yaml
+$ kubectl delete -f deploy/role_binding.yaml
+$ kubectl delete -f deploy/role.yaml
+$ kubectl delete -f deploy/service_account.yaml
+```
+
 ## Reference implementation
 
 The above walkthrough follows the actual implementation process used to produce the `memcached-operator` in the SDK [samples repo][repo_sdk_samples_memcached].
@@ -324,6 +336,21 @@ For the purpose of this guide, we will continue with this [predefined manifest][
 ### Deploy the Operator
 
 Deploying an operator is as simple as applying the operator’s CSV manifest to the desired namespace in the cluster.
+
+First we need to create an [OperatorGroup][operator_group_doc] that specifies the namespaces that the operator will be targeting. Create the following OperatorGroup in the namespace where you will create the CSV. In this example the `default` namespace is used.
+
+```YAML
+apiVersion: operators.coreos.com/v1alpha2
+kind: OperatorGroup
+metadata:
+  name: memcached-operator-group
+  namespace: default
+  spec:
+    targetNamespaces:
+    - default
+```
+
+Next create the CSV.
 
 ```sh
 $ curl -Lo memcachedoperator.0.0.1.csv.yaml https://raw.githubusercontent.com/operator-framework/getting-started/master/memcachedoperator.0.0.1.csv.yaml
@@ -398,6 +425,7 @@ Hopefully, this guide was an effective demonstration of the value of the Operato
 
 <!---  Reference URLs begin here -->
 
+[operator_group_doc]: https://github.com/operator-framework/operator-lifecycle-manager/blob/master/Documentation/design/operatorgroups.md
 [csv_design_doc]: https://github.com/operator-framework/operator-lifecycle-manager/blob/master/Documentation/design/building-your-csv.md
 [csv_generation_doc]: https://github.com/operator-framework/operator-sdk/blob/master/doc/user/olm-catalog/generating-a-csv.md
 [org_operator_framework]: https://github.com/operator-framework/

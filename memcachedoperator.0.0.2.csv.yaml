@@ -7,6 +7,15 @@ metadata:
   name: memcachedoperator.v0.0.2
   namespace: default
 spec:
+  installModes:
+  - supported: true
+    type: OwnNamespace
+  - supported: true
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: false
+    type: AllNamespaces
   install: 
     strategy: deployment
     spec:
