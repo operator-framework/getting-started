@@ -345,9 +345,9 @@ kind: OperatorGroup
 metadata:
   name: memcached-operator-group
   namespace: default
-  spec:
-    targetNamespaces:
-    - default
+spec:
+  targetNamespaces:
+  - default
 ```
 
 Next create the CSV.
