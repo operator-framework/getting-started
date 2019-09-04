@@ -1,5 +1,36 @@
 # Getting Started
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<!-- **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)* -->
+
+- [Overview](#overview)
+- [Build an operator using the Operator SDK](#build-an-operator-using-the-operator-sdk)
+  - [Create a new project](#create-a-new-project)
+  - [Manager](#manager)
+- [Add a new Custom Resource Definition](#add-a-new-custom-resource-definition)
+  - [Define the Memcached spec and status](#define-the-memcached-spec-and-status)
+- [Add a new Controller](#add-a-new-controller)
+  - [Resources watched by the Controller](#resources-watched-by-the-controller)
+  - [Reconcile loop](#reconcile-loop)
+- [Build and run the operator](#build-and-run-the-operator)
+  - [1. Run as a Deployment inside the cluster](#1-run-as-a-deployment-inside-the-cluster)
+  - [2. Run locally outside the cluster](#2-run-locally-outside-the-cluster)
+- [Create a Memcached CR](#create-a-memcached-cr)
+  - [Update the size](#update-the-size)
+  - [Cleanup](#cleanup)
+- [Reference implementation](#reference-implementation)
+- [Manage the operator using the Operator Lifecycle Manager](#manage-the-operator-using-the-operator-lifecycle-manager)
+  - [Generate an operator manifest](#generate-an-operator-manifest)
+  - [Deploy the Operator](#deploy-the-operator)
+  - [Create an application instance](#create-an-application-instance)
+  - [Update an application](#update-an-application)
+- [Conclusion](#conclusion)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Overview
+
 The [Operator Framework][org_operator_framework] ([intro blog post][site_blog_post]) is an open source toolkit to manage Kubernetes native applications, called operators, in an effective, automated, and scalable way. Operators take advantage of Kubernetes's extensibility to deliver the automation advantages of cloud services like provisioning, scaling, and backup/restore while being able to run anywhere that Kubernetes can run.
 
 This guide shows how to build a simple [memcached][site_memcached] operator and how to manage its lifecycle from install to update to a new version. For that, we will use two center pieces of the framework:
