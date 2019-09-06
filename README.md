@@ -426,8 +426,8 @@ Hopefully, this guide was an effective demonstration of the value of the Operato
 
 <!---  Reference URLs begin here -->
 
-[operator_group_doc]: https://github.com/operator-framework/operator-lifecycle-manager/blob/master/Documentation/design/operatorgroups.md
-[csv_design_doc]: https://github.com/operator-framework/operator-lifecycle-manager/blob/master/Documentation/design/building-your-csv.md
+[operator_group_doc]: https://github.com/operator-framework/operator-lifecycle-manager/blob/master/doc/design/operatorgroups.md
+[csv_design_doc]: https://github.com/operator-framework/operator-lifecycle-manager/blob/master/doc/design/building-your-csv.md
 [csv_generation_doc]: https://github.com/operator-framework/operator-sdk/blob/master/doc/user/olm-catalog/generating-a-csv.md
 [org_operator_framework]: https://github.com/operator-framework/
 [site_blog_post]: https://coreos.com/blog/introducing-operator-framework
@@ -436,7 +436,7 @@ Hopefully, this guide was an effective demonstration of the value of the Operato
 [site_memcached]: https://memcached.org/
 [doc_sdk_user_guide]: https://github.com/operator-framework/operator-sdk/blob/master/doc/user-guide.md
 [doc_sdk_install_instr]: https://github.com/operator-framework/operator-sdk/blob/master/doc/user-guide.md#install-the-operator-sdk-cli
-[doc_olm_install_instr]: https://github.com/operator-framework/operator-lifecycle-manager/blob/master/Documentation/install/install.md
+[doc_olm_install_instr]: https://github.com/operator-framework/operator-lifecycle-manager/blob/master/doc/install/install.md
 [layout_doc]: https://github.com/operator-framework/operator-sdk/blob/master/doc/project_layout.md
 [manager_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg/manager#Manager
 [controller_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg#hdr-Controller
