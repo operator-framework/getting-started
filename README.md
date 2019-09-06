@@ -48,27 +48,21 @@ This section walks through an example of building a simple memcached operator us
 
 ### Create a new project
 
-Use the CLI to create a new `memcached-operator` project:
+1. Use the CLI to create a new `memcached-operator` project:
 
 
 ```sh
 $ mkdir -p $GOPATH/src/github.com/example-inc/
 $ cd $GOPATH/src/github.com/example-inc/
 $ operator-sdk new memcached-operator
-Create cmd/manager/main.go
-...
-Run dep ensure ...
-...
-Run dep ensure done
-Run git init ...
-...
-Run git init done
 $ cd memcached-operator
 ```
 
 This creates the `memcached-operator` project.
 
-Learn more about the project directory structure from the SDK [project layout][layout_doc] documentation.
+2. Install dependencies by running `go mod tidy`
+
+**NOTE:** Learn more about the project directory structure from the SDK [project layout][layout_doc] documentation.
 
 ### Manager
 
@@ -118,6 +112,14 @@ After modifying the `*_types.go` file always run the following command to update
 ```sh
 $ operator-sdk generate k8s
 ```
+
+Also run the following command in order to automatically generate the OpenAPI validations.
+
+```sh
+operator-sdk generate openapi
+```
+
+You can see the changes applied in `deploy/crds/cache_v1alpha1_memcached_crd.yaml`
 
 ## Add a new Controller
 
@@ -215,25 +217,25 @@ containers:
   image: quay.io/example/memcached-operator:v0.0.1
   command:
   - memcached-operator
-  imagePullPolicy: Always 
+  imagePullPolicy: Always
 ```
 
-**IMPORTANT:** Ensure that your cluster is able to pull the image pushed to your registry. 
+**IMPORTANT:** Ensure that your cluster is able to pull the image pushed to your registry.
 
 The Deployment manifest is generated at `deploy/operator.yaml`. Be sure to update the deployment image as shown above since the default is just a placeholder.
 
 Setup RBAC and deploy the memcached-operator:
 
 ```sh
-$ kubectl create -f deploy/service_account.yaml
+$ kubectl create -f deploy/service_account.yaml 
 $ kubectl create -f deploy/role.yaml
 $ kubectl create -f deploy/role_binding.yaml
 $ kubectl create -f deploy/operator.yaml
 ```
 
-**NOTE**:To apply the RBAC you need be logged in as a user with cluster privileges, for example with the system:admin user to test it. (E.g. By using: `oc login -u system:admin.`) 
+**NOTE:** To apply the RBAC you need be logged in as a user with cluster privileges, for example with the system:admin user to test it. (E.g. By using: `oc login -u system:admin.`) 
 
-Verify that the memcached-operator deployment is up and running:
+Verify that the memcached-operator deployment is up and running in the `memcached` namespace :
 
 ```sh
 $ kubectl get deployment
@@ -249,7 +251,7 @@ NAME                                  READY     STATUS    RESTARTS   AGE
 memcached-operator-7d76948766-nrcp7   1/1       Running   0          44s
 ```
 
-**IMPORTANT:** Please, ensure that you built and pushed the image as updated the `operator.yaml file with.   
+**IMPORTANT:** Ensure that you built and pushed the image, and updated the `operator.yaml` file.   
 
 Verify that the operator is running successfully by checking it logs. 
 
