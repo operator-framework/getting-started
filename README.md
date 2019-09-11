@@ -23,6 +23,7 @@ Use the CLI to create a new `memcached-operator` project:
 ```sh
 $ mkdir -p $GOPATH/src/github.com/example-inc/
 $ cd $GOPATH/src/github.com/example-inc/
+$ export GO111MODULE=on
 $ operator-sdk new memcached-operator
 Create cmd/manager/main.go
 ...
