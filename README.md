@@ -116,7 +116,7 @@ $ operator-sdk generate k8s
 Also run the following command in order to automatically generate the OpenAPI validations.
 
 ```sh
-operator-sdk generate openapi
+$ operator-sdk generate openapi
 ```
 
 You can see the changes applied in `deploy/crds/cache_v1alpha1_memcached_crd.yaml`
