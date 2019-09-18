@@ -274,8 +274,6 @@ $ kubectl logs memcached-operator-7d76948766-nrcp7
 
 The following error will occur if your cluster was unable to pull the image:
 
-**NOTE:** Just for tests purposes make the image public and setting up the cluster to allow use insecure registry. ( E.g `--insecure-registry 172.30.0.0/16` )  
-
 ```sh
 $ kubectl get pod
 NAME                                  READY     STATUS             RESTARTS   AGE
@@ -288,6 +286,8 @@ Following the logs in the error scenario described above.
 $ kubectl logs memcached-operator-6b5dc697fb-t62cv
 Error from server (BadRequest): container "memcached-operator" in pod "memcached-operator-6b5dc697fb-t62cv" is waiting to start: image can't be pulled
 ```
+
+**NOTE:** Just for tests purposes make the image public and setting up the cluster to allow use insecure registry. ( E.g `--insecure-registry 172.30.0.0/16` )  
 
 ### 2. Run locally outside the cluster
 
