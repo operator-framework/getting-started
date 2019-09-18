@@ -195,9 +195,7 @@ Once this is done, there are two ways to run the operator:
 
 ### 1. Run as a Deployment inside the cluster
 
-Build the memcached-operator image and push it to your registry as the following example using https://quay.io.
-
-**NOTE**: You are able to you the https://hub.docker.com/ if you wish. 
+Build the memcached-operator image and push it to your registry. The following example uses https://quay.io as the registry.
 
 ```sh
 $ operator-sdk build quay.io/<user>/memcached-operator:v0.0.1
@@ -207,14 +205,14 @@ $ sed -i "" 's|REPLACE_IMAGE|quay.io/<user>/memcached-operator:v0.0.1|g' deploy/
 $ docker push quay.io/<user>/memcached-operator:v0.0.1
 ```
 
-The above command will replace the string `REPLACE_IMAGE` with the <image>:<tag> build and pushed to your registry then verify that your `operator.yaml` file was updated successfully. Following an example.
+The above command will replace the string `REPLACE_IMAGE` with the `<image>:<tag>` built above. Afterwards, verify that your `operator.yaml` file was updated successfully.
 
 ```yaml
 serviceAccountName: memcached-operator
 containers:
 - name: memcached-operator
   # Replace this with the built image name
-  image: quay.io/example/memcached-operator:v0.0.1
+  image: quay.io/<user>/memcached-operator:v0.0.1
   command:
   - memcached-operator
   imagePullPolicy: Always
@@ -227,15 +225,15 @@ The Deployment manifest is generated at `deploy/operator.yaml`. Be sure to updat
 Setup RBAC and deploy the memcached-operator:
 
 ```sh
-$ kubectl create -f deploy/service_account.yaml 
+$ kubectl create -f deploy/service_account.yaml
 $ kubectl create -f deploy/role.yaml
 $ kubectl create -f deploy/role_binding.yaml
 $ kubectl create -f deploy/operator.yaml
 ```
 
-**NOTE:** To apply the RBAC you need be logged in as a user with cluster privileges, for example with the system:admin user to test it. (E.g. By using: `oc login -u system:admin.`) 
+**NOTE:** To apply the RBAC you need to be logged in `system:admin`. (E.g. By using for OCP: `oc login -u system:admin.`) 
 
-Verify that the memcached-operator deployment is up and running in the `memcached` namespace :
+Verify that the `memcached-operator` Deployment is up and running:
 
 ```sh
 $ kubectl get deployment
@@ -243,7 +241,7 @@ NAME                     DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
 memcached-operator       1         1         1            1           1m
 ```
 
-Verify that the memcached-operator pod is up and running:
+Verify that the `memcached-operator` pod is up and running:
 
 ```sh
 $ kubectl get pod
@@ -253,7 +251,7 @@ memcached-operator-7d76948766-nrcp7   1/1       Running   0          44s
 
 **IMPORTANT:** Ensure that you built and pushed the image, and updated the `operator.yaml` file.   
 
-Verify that the operator is running successfully by checking it logs. 
+Verify that the operator is running successfully by checking its logs. 
 
 ```sh
 $ kubectl logs memcached-operator-7d76948766-nrcp7
@@ -274,9 +272,9 @@ $ kubectl logs memcached-operator-7d76948766-nrcp7
 {"level":"info","ts":1567613604.3995395,"logger":"kubebuilder.controller","msg":"Starting workers","controller":"memcached-controller","worker count":1}
 ```
 
-The following error will be faced if your cluster was unable to pull the image. 
+The following error will occur if your cluster was unable to pull the image:
 
-**NOTE:** Just for tests purposes make the image public and setting up the cluster to allow use insecure registry. ( E.g --insecure-registry 172.30.0.0/16 )  
+**NOTE:** Just for tests purposes make the image public and setting up the cluster to allow use insecure registry. ( E.g `--insecure-registry 172.30.0.0/16` )  
 
 ```sh
 $ kubectl get pod
@@ -287,7 +285,7 @@ memcached-operator-6b5dc697fb-t62cv   0/1       ImagePullBackOff   0          2m
 Following the logs in the error scenario described above. 
 
 ```sh
-$kubectl logs memcached-operator-6b5dc697fb-t62cv
+$ kubectl logs memcached-operator-6b5dc697fb-t62cv
 Error from server (BadRequest): container "memcached-operator" in pod "memcached-operator-6b5dc697fb-t62cv" is waiting to start: image can't be pulled
 ```
 
@@ -330,7 +328,7 @@ spec:
 $ kubectl apply -f deploy/crds/cache_v1alpha1_memcached_cr.yaml
 ```
 
-Ensure that the memcached-operator creates the deployment for the CR:
+Ensure that the `memcached-operator` creates the deployment for the CR:
 
 ```sh
 $ kubectl get deployment
