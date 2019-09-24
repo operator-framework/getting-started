@@ -1,5 +1,36 @@
 # Getting Started
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<!-- **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)* -->
+
+- [Overview](#overview)
+- [Build an operator using the Operator SDK](#build-an-operator-using-the-operator-sdk)
+  - [Create a new project](#create-a-new-project)
+  - [Manager](#manager)
+- [Add a new Custom Resource Definition](#add-a-new-custom-resource-definition)
+  - [Define the Memcached spec and status](#define-the-memcached-spec-and-status)
+- [Add a new Controller](#add-a-new-controller)
+  - [Resources watched by the Controller](#resources-watched-by-the-controller)
+  - [Reconcile loop](#reconcile-loop)
+- [Build and run the operator](#build-and-run-the-operator)
+  - [1. Run as a Deployment inside the cluster](#1-run-as-a-deployment-inside-the-cluster)
+  - [2. Run locally outside the cluster](#2-run-locally-outside-the-cluster)
+- [Create a Memcached CR](#create-a-memcached-cr)
+  - [Update the size](#update-the-size)
+  - [Cleanup](#cleanup)
+- [Reference implementation](#reference-implementation)
+- [Manage the operator using the Operator Lifecycle Manager](#manage-the-operator-using-the-operator-lifecycle-manager)
+  - [Generate an operator manifest](#generate-an-operator-manifest)
+  - [Deploy the Operator](#deploy-the-operator)
+  - [Create an application instance](#create-an-application-instance)
+  - [Update an application](#update-an-application)
+- [Conclusion](#conclusion)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Overview
+
 The [Operator Framework][org_operator_framework] ([intro blog post][site_blog_post]) is an open source toolkit to manage Kubernetes native applications, called operators, in an effective, automated, and scalable way. Operators take advantage of Kubernetes's extensibility to deliver the automation advantages of cloud services like provisioning, scaling, and backup/restore while being able to run anywhere that Kubernetes can run.
 
 This guide shows how to build a simple [memcached][site_memcached] operator and how to manage its lifecycle from install to update to a new version. For that, we will use two center pieces of the framework:
@@ -17,7 +48,7 @@ This section walks through an example of building a simple memcached operator us
 
 ### Create a new project
 
-Use the CLI to create a new `memcached-operator` project:
+1. Use the CLI to create a new `memcached-operator` project:
 
 
 ```sh
@@ -25,20 +56,14 @@ $ mkdir -p $GOPATH/src/github.com/example-inc/
 $ cd $GOPATH/src/github.com/example-inc/
 $ export GO111MODULE=on
 $ operator-sdk new memcached-operator
-Create cmd/manager/main.go
-...
-Run dep ensure ...
-...
-Run dep ensure done
-Run git init ...
-...
-Run git init done
 $ cd memcached-operator
 ```
 
 This creates the `memcached-operator` project.
 
-Learn more about the project directory structure from the SDK [project layout][layout_doc] documentation.
+2. Install dependencies by running `go mod tidy`
+
+**NOTE:** Learn more about the project directory structure from the SDK [project layout][layout_doc] documentation.
 
 ### Manager
 
@@ -88,6 +113,14 @@ After modifying the `*_types.go` file always run the following command to update
 ```sh
 $ operator-sdk generate k8s
 ```
+
+Also run the following command in order to automatically generate the OpenAPI validations.
+
+```sh
+$ operator-sdk generate openapi
+```
+
+You can see the changes applied in `deploy/crds/cache_v1alpha1_memcached_crd.yaml`
 
 ## Add a new Controller
 
@@ -163,15 +196,30 @@ Once this is done, there are two ways to run the operator:
 
 ### 1. Run as a Deployment inside the cluster
 
-Build the memcached-operator image and push it to a registry:
+Build the memcached-operator image and push it to your registry. The following example uses https://quay.io as the registry.
 
 ```sh
-$ operator-sdk build quay.io/example/memcached-operator:v0.0.1
-$ sed -i 's|REPLACE_IMAGE|quay.io/example/memcached-operator:v0.0.1|g' deploy/operator.yaml
+$ operator-sdk build quay.io/<user>/memcached-operator:v0.0.1
+$ sed -i 's|REPLACE_IMAGE|quay.io/<user>/memcached-operator:v0.0.1|g' deploy/operator.yaml
 # On OSX use:
-$ sed -i "" 's|REPLACE_IMAGE|quay.io/example/memcached-operator:v0.0.1|g' deploy/operator.yaml
-$ docker push quay.io/example/memcached-operator:v0.0.1
+$ sed -i "" 's|REPLACE_IMAGE|quay.io/<user>/memcached-operator:v0.0.1|g' deploy/operator.yaml
+$ docker push quay.io/<user>/memcached-operator:v0.0.1
 ```
+
+The above command will replace the string `REPLACE_IMAGE` with the `<image>:<tag>` built above. Afterwards, verify that your `operator.yaml` file was updated successfully.
+
+```yaml
+serviceAccountName: memcached-operator
+containers:
+- name: memcached-operator
+  # Replace this with the built image name
+  image: quay.io/<user>/memcached-operator:v0.0.1
+  command:
+  - memcached-operator
+  imagePullPolicy: Always
+```
+
+**IMPORTANT:** Ensure that your cluster is able to pull the image pushed to your registry.
 
 The Deployment manifest is generated at `deploy/operator.yaml`. Be sure to update the deployment image as shown above since the default is just a placeholder.
 
@@ -184,13 +232,63 @@ $ kubectl create -f deploy/role_binding.yaml
 $ kubectl create -f deploy/operator.yaml
 ```
 
-Verify that the memcached-operator is up and running:
+**NOTE:** To apply the RBAC you need to be logged in `system:admin`. (E.g. By using for OCP: `oc login -u system:admin.`) 
+
+Verify that the `memcached-operator` Deployment is up and running:
 
 ```sh
 $ kubectl get deployment
 NAME                     DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
 memcached-operator       1         1         1            1           1m
 ```
+
+Verify that the `memcached-operator` pod is up and running:
+
+```sh
+$ kubectl get pod
+NAME                                  READY     STATUS    RESTARTS   AGE
+memcached-operator-7d76948766-nrcp7   1/1       Running   0          44s
+```
+
+**IMPORTANT:** Ensure that you built and pushed the image, and updated the `operator.yaml` file.   
+
+Verify that the operator is running successfully by checking its logs. 
+
+```sh
+$ kubectl logs memcached-operator-7d76948766-nrcp7
+{"level":"info","ts":1567613603.7161574,"logger":"cmd","msg":"Go Version: go1.12.7"}
+{"level":"info","ts":1567613603.7163043,"logger":"cmd","msg":"Go OS/Arch: linux/amd64"}
+{"level":"info","ts":1567613603.7163143,"logger":"cmd","msg":"Version of operator-sdk: v0.10.0+git"}
+{"level":"info","ts":1567613603.7166178,"logger":"leader","msg":"Trying to become the leader."}
+{"level":"info","ts":1567613603.8369129,"logger":"leader","msg":"No pre-existing lock was found."}
+{"level":"info","ts":1567613603.8667152,"logger":"leader","msg":"Became the leader."}
+{"level":"info","ts":1567613603.9393756,"logger":"cmd","msg":"Registering Components."}
+{"level":"info","ts":1567613603.9396026,"logger":"kubebuilder.controller","msg":"Starting EventSource","controller":"memcached-controller","source":"kind source: /, Kind="}
+{"level":"info","ts":1567613603.9398162,"logger":"kubebuilder.controller","msg":"Starting EventSource","controller":"memcached-controller","source":"kind source: /, Kind="}
+{"level":"info","ts":1567613604.0514739,"logger":"metrics","msg":"Metrics Service object created","Service.Name":"memcached-operator-metrics","Service.Namespace":"myproject"}
+{"level":"info","ts":1567613604.0976534,"logger":"cmd","msg":"Could not create ServiceMonitor object","error":"no ServiceMonitor registered with the API"}
+{"level":"info","ts":1567613604.0986068,"logger":"cmd","msg":"Install prometheus-operator in your cluster to create ServiceMonitor objects","error":"no ServiceMonitor registered with the API"}
+{"level":"info","ts":1567613604.0988326,"logger":"cmd","msg":"Starting the Cmd."}
+{"level":"info","ts":1567613604.2993534,"logger":"kubebuilder.controller","msg":"Starting Controller","controller":"memcached-controller"}
+{"level":"info","ts":1567613604.3995395,"logger":"kubebuilder.controller","msg":"Starting workers","controller":"memcached-controller","worker count":1}
+```
+
+The following error will occur if your cluster was unable to pull the image:
+
+```sh
+$ kubectl get pod
+NAME                                  READY     STATUS             RESTARTS   AGE
+memcached-operator-6b5dc697fb-t62cv   0/1       ImagePullBackOff   0          2m
+```
+
+Following the logs in the error scenario described above. 
+
+```sh
+$ kubectl logs memcached-operator-6b5dc697fb-t62cv
+Error from server (BadRequest): container "memcached-operator" in pod "memcached-operator-6b5dc697fb-t62cv" is waiting to start: image can't be pulled
+```
+
+**NOTE:** Just for tests purposes make the image public and setting up the cluster to allow use insecure registry. ( E.g `--insecure-registry 172.30.0.0/16` )  
 
 ### 2. Run locally outside the cluster
 
@@ -231,7 +329,7 @@ spec:
 $ kubectl apply -f deploy/crds/cache_v1alpha1_memcached_cr.yaml
 ```
 
-Ensure that the memcached-operator creates the deployment for the CR:
+Ensure that the `memcached-operator` creates the deployment for the CR:
 
 ```sh
 $ kubectl get deployment
@@ -320,8 +418,6 @@ The previous section has covered manually running an operator. In the next secti
 
 OLM helps you to install, update, and generally manage the lifecycle of all of the operators (and their associated services) on a Kubernetes cluster. It runs as an Kubernetes extension and lets you use `kubectl` for all the lifecycle management functions without any additional tools.
 
-
-
 ### Generate an operator manifest
 
 The first step to leveraging OLM is to create a [Cluster Service Version][csv_design_doc] (CSV) manifest. An operator manifest describes how to display, create and manage the application, in this case memcached, as a whole. It is required for OLM to function.
@@ -331,7 +427,6 @@ The Operator SDK CLI can generate CSV manifests via the following command:
 $ operator-sdk olm-catalog gen-csv --csv-version 0.0.1
 ```
 For more details see the SDK's [CSV generation doc][csv_generation_doc].
-
 
 For the purpose of this guide, we will continue with this [predefined manifest][manifest_v1] file for the next steps. If you’d like, you can alter the image field within this manifest to reflect the image you built in previous steps, but it is unnecessary.
 
