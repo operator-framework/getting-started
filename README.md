@@ -36,9 +36,11 @@ The [Operator Framework][org_operator_framework] ([intro blog post][site_blog_po
 This guide shows how to build a simple [memcached][site_memcached] operator and how to manage its lifecycle from install to update to a new version. For that, we will use two center pieces of the framework:
 
 * **Operator SDK**: Allows your developers to build an operator based on your expertise without requiring knowledge of Kubernetes API complexities.
-* **Lifecycle Manager**: Helps you to install, update, and generally manage the lifecycle of all of the operators (and their associated services) running across your clusters.
+* **Operator Lifecycle Manager**: Helps you to install, update, and generally manage the lifecycle of all of the operators (and their associated services) running across your clusters.
 
 ## Build an operator using the Operator SDK
+
+**BEFORE YOU BEGIN:** links to the Operator SDK repo in this document are pinned to the `master` branch. Make sure you update the link such that it points to the correct Operator SDK repo version, which should match this repo's version or the `operator-sdk version` being used. For example, if you are using `operator-sdk` v0.10.0, update all links from this repo to the SDK repo with `master -> v0.10.0`. Otherwise you may see incorrect information.
 
 The Operator SDK makes it easier to build Kubernetes native applications, a process that can require deep, application-specific operational knowledge. The SDK not only lowers that barrier, but it also helps reduce the amount of boilerplate code needed for many common management capabilities, such as metering or monitoring.
 
@@ -232,7 +234,7 @@ $ kubectl create -f deploy/role_binding.yaml
 $ kubectl create -f deploy/operator.yaml
 ```
 
-**NOTE:** To apply the RBAC you need to be logged in `system:admin`. (E.g. By using for OCP: `oc login -u system:admin.`) 
+**NOTE:** To apply the RBAC you need to be logged in `system:admin`. (E.g. By using for OCP: `oc login -u system:admin.`)
 
 Verify that the `memcached-operator` Deployment is up and running:
 
@@ -252,7 +254,7 @@ memcached-operator-7d76948766-nrcp7   1/1       Running   0          44s
 
 **IMPORTANT:** Ensure that you built and pushed the image, and updated the `operator.yaml` file.   
 
-Verify that the operator is running successfully by checking its logs. 
+Verify that the operator is running successfully by checking its logs.
 
 ```sh
 $ kubectl logs memcached-operator-7d76948766-nrcp7
@@ -281,7 +283,7 @@ NAME                                  READY     STATUS             RESTARTS   AG
 memcached-operator-6b5dc697fb-t62cv   0/1       ImagePullBackOff   0          2m
 ```
 
-Following the logs in the error scenario described above. 
+Following the logs in the error scenario described above.
 
 ```sh
 $ kubectl logs memcached-operator-6b5dc697fb-t62cv
