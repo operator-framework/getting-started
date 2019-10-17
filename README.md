@@ -19,7 +19,7 @@
 - [Create a Memcached CR](#create-a-memcached-cr)
   - [Update the size](#update-the-size)
   - [Cleanup](#cleanup)
-- [Reference implementation](#reference-implementation)
+- [Samples](#samples)
 - [Manage the operator using the Operator Lifecycle Manager](#manage-the-operator-using-the-operator-lifecycle-manager)
   - [Generate an operator manifest](#generate-an-operator-manifest)
   - [Deploy the Operator](#deploy-the-operator)
@@ -410,9 +410,9 @@ $ kubectl delete -f deploy/role.yaml
 $ kubectl delete -f deploy/service_account.yaml
 ```
 
-## Reference implementation
+## Samples
 
-The above walkthrough follows the actual implementation process used to produce the `memcached-operator` in the SDK [samples repo][repo_sdk_samples_memcached].
+For further understanding see the implementation used to produce the `memcached-operator` in the SDK [samples repo][repo_sdk_samples_memcached].
 
 ## Manage the operator using the Operator Lifecycle Manager
 
@@ -538,7 +538,7 @@ Hopefully, this guide was an effective demonstration of the value of the Operato
 [layout_doc]: https://github.com/operator-framework/operator-sdk/blob/master/doc/project_layout.md
 [manager_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg/manager#Manager
 [controller_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg#hdr-Controller
-[memcached_controller]: https://github.com/operator-framework/operator-sdk/blob/master/example/memcached-operator/memcached_controller.go.tmpl
+[memcached_controller]: controller.go
 [request_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg/reconcile#Request
 [result_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg/reconcile#Result
 [doc_client_api]: https://github.com/operator-framework/operator-sdk/blob/master/doc/user/client.md
