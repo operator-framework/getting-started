@@ -1,9 +1,5 @@
 # Getting Started
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-<!-- **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)* -->
-
 - [Overview](#overview)
 - [Build an operator using the Operator SDK](#build-an-operator-using-the-operator-sdk)
   - [Create a new project](#create-a-new-project)
@@ -22,12 +18,9 @@
 - [Reference implementation](#reference-implementation)
 - [Manage the operator using the Operator Lifecycle Manager](#manage-the-operator-using-the-operator-lifecycle-manager)
   - [Generate an operator manifest](#generate-an-operator-manifest)
-  - [Deploy the Operator](#deploy-the-operator)
-  - [Create an application instance](#create-an-application-instance)
-  - [Update an application](#update-an-application)
+  - [Testing locally](#testing-locally)
+  - [Promoting operator standards](#promoting-operator-standards)
 - [Conclusion](#conclusion)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Overview
 
@@ -416,107 +409,42 @@ The above walkthrough follows the actual implementation process used to produce 
 
 ## Manage the operator using the Operator Lifecycle Manager
 
+> NOTE: This section of the Getting Started Guide is out-of-date.
+> We're working on some improvements to Operator SDK to streamline
+> the experience of using OLM. For further information see, for example, this enhancement [proposal][sdk-integration-with-olm-doc]. 
+> In the meantime, you might find the following documentation helpful: 
+
 The previous section has covered manually running an operator. In the next sections, we will explore using the [Operator Lifecycle Manager][operator_lifecycle_manager] (OLM) which is what enables a more robust deployment model for operators being run in production environments.
 
 OLM helps you to install, update, and generally manage the lifecycle of all of the operators (and their associated services) on a Kubernetes cluster. It runs as an Kubernetes extension and lets you use `kubectl` for all the lifecycle management functions without any additional tools.
+
+**NOTE:** Various public, OLM-ready operator projects are available at [operatorhub.io][operator-hub-io]. 
 
 ### Generate an operator manifest
 
 The first step to leveraging OLM is to create a [Cluster Service Version][csv_design_doc] (CSV) manifest. An operator manifest describes how to display, create and manage the application, in this case memcached, as a whole. It is required for OLM to function.
 
 The Operator SDK CLI can generate CSV manifests via the following command:
+
 ```console
-$ operator-sdk olm-catalog gen-csv --csv-version 0.0.1
-```
-For more details see the SDK's [CSV generation doc][csv_generation_doc].
-
-For the purpose of this guide, we will continue with this [predefined manifest][manifest_v1] file for the next steps. If you’d like, you can alter the image field within this manifest to reflect the image you built in previous steps, but it is unnecessary.
-
-### Deploy the Operator
-
-Deploying an operator is as simple as applying the operator’s CSV manifest to the desired namespace in the cluster.
-
-First we need to create an [OperatorGroup][operator_group_doc] that specifies the namespaces that the operator will be targeting. Create the following OperatorGroup in the namespace where you will create the CSV. In this example the `default` namespace is used.
-
-```YAML
-apiVersion: operators.coreos.com/v1alpha2
-kind: OperatorGroup
-metadata:
-  name: memcached-operator-group
-  namespace: default
-spec:
-  targetNamespaces:
-  - default
+$ operator-sdk olm-catalog gen-csv --csv-version 0.0.1 --update-crds
 ```
 
-Next create the CSV.
+Several fields must be updated after generating the CSV. See the CSV generation doc for a list of [required fields][csv-fields], and the memcached-operator [CSV][memcached_csv] for an example of a complete CSV.
 
-```sh
-$ curl -Lo memcachedoperator.0.0.1.csv.yaml https://raw.githubusercontent.com/operator-framework/getting-started/master/memcachedoperator.0.0.1.csv.yaml
-$ kubectl apply -f memcachedoperator.0.0.1.csv.yaml
-$ kubectl get ClusterServiceVersion memcachedoperator.v0.0.1 -o json | jq '.status'
-```
+**NOTE:** You are able to preview and validate your CSV manifest syntax in the [operatorhub.io CSV Preview][operator-hub-io-preview] tool.
 
-After applying this manifest, nothing has happened yet, because the cluster does not meet the requirements specified in our manifest. Create the CustomResourceDefinition and RBAC rules for the `Memcached` type managed by the operator:
+### Testing locally
 
-```sh
-$ kubectl create -f deploy/crds/cache_v1alpha1_memcached_crd.yaml
-$ kubectl create -f deploy/service_account.yaml
-$ kubectl create -f deploy/role.yaml
-$ kubectl create -f deploy/role_binding.yaml
-```
+The next step is to ensure your project deploys correctly with OLM and runs as expected. Follow this [testing guide][testing-operators] to deploy and test your operator.
 
-Because OLM creates operators in a particular namespace when a manifest has been applied, administrators can leverage the native Kubernetes RBAC permission model to restrict which users are allowed to install operators.
+**NOTE:** Also, you may would like to check a feature to build the bundle in the [OperatorHub.io][operator-hub-i-bundle].
 
-### Create an application instance
+### Promoting operator standards
 
-The memcached operator is now running in the `memcached` namespace. Users interact with operators via instances of CustomResources; in this case, the resource has the Kind `Memcached`. Native Kubernetes RBAC also applies to CustomResources, providing administrators control over who can interact with each operator.
+We recommend running `operator-sdk scorecard` against your operator to see whether your operator's OLM integration follows best practices. For further information on running the scorecard and results, see the [scorecard documentation][scorecard-doc].
 
-Creating instances of memcached in this namespace will now trigger the memcached operator to instantiate pods running the memcached server that are managed by the operator. The more CustomResources you create, the more unique instances of memcached will be managed by the memcached operator running in this namespace.
-
-```sh
-$ cat <<EOF | kubectl apply -f -
-apiVersion: "cache.example.com/v1alpha1"
-kind: "Memcached"
-metadata:
-  name: "memcached-for-wordpress"
-spec:
-  size: 1
-EOF
-$ cat <<EOF | kubectl apply -f -
-apiVersion: "cache.example.com/v1alpha1"
-kind: "Memcached"
-metadata:
-  name: "memcached-for-drupal"
-spec:
-  size: 1
-EOF
-$ kubectl get Memcached
-NAME                      AGE
-memcached-for-drupal      22s
-memcached-for-wordpress   27s
-$ kubectl get pods
-NAME                                       READY     STATUS    RESTARTS   AGE
-memcached-app-operator-66b5777b79-pnsfj    1/1       Running   0          14m
-memcached-for-drupal-5476487c46-qbd66      1/1       Running   0          3s
-memcached-for-wordpress-65b75fd8c9-7b9x7   1/1       Running   0          8s
-```
-
-### Update an application
-
-Manually applying an update to the operator is as simple as creating a new operator manifest with a `replaces` field that references the old operator manifest. OLM will ensure that all resources being managed by the old operator have their ownership moved to the new operator without fear of any programs stopping execution. It is up to the operators themselves to execute any data migrations required to upgrade resources to run under a new version of the operator.
-
-The following command demonstrates applying a new [operator manifest][manifest_v2] using a new version of the operator and shows that the pods remain executing:
-
-```sh
-$ curl -Lo memcachedoperator.0.0.2.csv.yaml https://raw.githubusercontent.com/operator-framework/getting-started/master/memcachedoperator.0.0.2.csv.yaml
-$ kubectl apply -f memcachedoperator.0.0.2.csv.yaml
-$ kubectl get pods
-NAME                                       READY     STATUS    RESTARTS   AGE
-memcached-app-operator-66b5777b79-pnsfj    1/1       Running   0          3s
-memcached-for-drupal-5476487c46-qbd66      1/1       Running   0          14m
-memcached-for-wordpress-65b75fd8c9-7b9x7   1/1       Running   0          14m
-```
+**NOTE:** the scorecard is undergoing changes to give informative and helpful feedback. The original scorecard functionality will still be available while and after changes are made.
 
 ## Conclusion
 
@@ -543,6 +471,12 @@ Hopefully, this guide was an effective demonstration of the value of the Operato
 [result_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg/reconcile#Result
 [doc_client_api]: https://github.com/operator-framework/operator-sdk/blob/master/doc/user/client.md
 [repo_sdk_samples_memcached]: https://github.com/operator-framework/operator-sdk-samples/tree/master/memcached-operator/
-[manifest_v1]: memcachedoperator.0.0.1.csv.yaml
-[manifest_v2]: memcachedoperator.0.0.2.csv.yaml
 [mailing_list]: https://groups.google.com/forum/#!forum/operator-framework
+[memcached_csv]: https://github.com/operator-framework/operator-sdk/blob/master/test/test-framework/deploy/olm-catalog/memcached-operator/0.0.3/memcached-operator.v0.0.3.clusterserviceversion.yaml
+[testing-operators]: https://github.com/operator-framework/community-operators/blob/master/docs/testing-operators.md
+[sdk-integration-with-olm-doc]: https://github.com/operator-framework/operator-sdk/blob/master/doc/proposals/sdk-integration-with-olm.md
+[operator-hub-io]: https://operatorhub.io/ 
+[operator-hub-io-preview]: https://operatorhub.io/preview
+[operator-hub-i-bundle]: https://operatorhub.io/bundle
+[scorecard-doc]: https://github.com/operator-framework/operator-sdk/blob/master/doc/test-framework/scorecard.md
+[csv-fields]: https://github.com/operator-framework/operator-sdk/blob/master/doc/user/olm-catalog/generating-a-csv.md#csv-fields
