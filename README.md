@@ -202,15 +202,15 @@ Once this is done, there are two ways to run the operator:
 Build the memcached-operator image and push it to your registry. The following example uses https://quay.io as the registry.
 
 ```sh
-$ operator-sdk build quay.io/<user>/memcached-operator:v0.0.1
-$ sed -i 's|REPLACE_IMAGE|quay.io/<user>/memcached-operator:v0.0.1|g' deploy/operator.yaml
+$ operator-sdk build quay.io/example/memcached-operator:v0.0.1
+$ sed -i 's|REPLACE_IMAGE|quay.io/example/memcached-operator:v0.0.1|g' deploy/operator.yaml
+$ docker push quay.io/example/memcached-operator:v0.0.1
 ```
 
-**NOTE** On OSX use:
-
+**Note**
+If you are performing these steps on OSX, use the following `sed` command instead:
 ```sh
-$ sed -i "" 's|REPLACE_IMAGE|quay.io/<user>/memcached-operator:v0.0.1|g' deploy/operator.yaml
-$ docker push quay.io/<user>/memcached-operator:v0.0.1
+$ sed -i "" 's|REPLACE_IMAGE|quay.io/example/memcached-operator:v0.0.1|g' deploy/operator.yaml
 ```
 
 The above command will replace the string `REPLACE_IMAGE` with the `<image>:<tag>` built above. Afterwards, verify that your `operator.yaml` file was updated successfully.
