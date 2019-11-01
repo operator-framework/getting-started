@@ -477,6 +477,6 @@ Hopefully, this guide was an effective demonstration of the value of the Operato
 [sdk-integration-with-olm-doc]: https://github.com/operator-framework/operator-sdk/blob/master/doc/proposals/sdk-integration-with-olm.md
 [operator-hub-io]: https://operatorhub.io/ 
 [operator-hub-io-preview]: https://operatorhub.io/preview
-[operator-hub-i-bundle]: https://operatorhub.io/bundle
+[operator-hub-io-bundle]: https://operatorhub.io/bundle
 [scorecard-doc]: https://github.com/operator-framework/operator-sdk/blob/master/doc/test-framework/scorecard.md
 [csv-fields]: https://github.com/operator-framework/operator-sdk/blob/master/doc/user/olm-catalog/generating-a-csv.md#csv-fields
