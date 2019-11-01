@@ -438,7 +438,7 @@ Several fields must be updated after generating the CSV. See the CSV generation 
 
 The next step is to ensure your project deploys correctly with OLM and runs as expected. Follow this [testing guide][testing-operators] to deploy and test your operator.
 
-**NOTE:** Also, you may would like to check a feature to build the bundle in the [OperatorHub.io][operator-hub-i-bundle].
+**NOTE:** Also, check out operatorhub.io's [bundle build tool][operator-hub-io-bundle] as an alternative to using `operator-sdk olm-catalog gen-csv`.
 
 ### Promoting operator standards
 
