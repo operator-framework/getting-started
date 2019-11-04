@@ -417,7 +417,7 @@ $ kubectl delete -f deploy/service_account.yaml
 
 ## Reference implementation
 
-Also, please feel free to check an `memcached-operator` project in the SDK [samples repo][repo_sdk_samples_memcached].
+The above walkthrough follows a similar implementation process to the one used to produce the `memcached-operator` in the SDK [samples repo][repo_sdk_samples_memcached].
 
 ## Manage the operator using the Operator Lifecycle Manager
 
