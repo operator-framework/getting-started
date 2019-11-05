@@ -33,7 +33,7 @@ This guide shows how to build a simple [memcached][site_memcached] operator and 
 
 ## Build an operator using the Operator SDK
 
-**BEFORE YOU BEGIN:** links to the Operator SDK repo in this document are pinned to the `master` branch. Make sure you update the link such that it points to the correct Operator SDK repo version, which should match this repo's version or the `operator-sdk version` being used. For example, if you are using `operator-sdk` v0.10.0, update all links from this repo to the SDK repo with `master -> v0.10.0`. Otherwise you may see incorrect information.
+**BEFORE YOU BEGIN:** links to the Operator SDK repo in this document are pinned to the `master` branch. Make sure you update the link such that it points to the correct Operator SDK repo version, which should match this repo's version or the `operator-sdk version` being used. For example, if you are using `operator-sdk` v0.12.0, update all links from this repo to the SDK repo with `master -> v0.12.0`. Otherwise you may see incorrect information.
 
 The Operator SDK makes it easier to build Kubernetes native applications, a process that can require deep, application-specific operational knowledge. The SDK not only lowers that barrier, but it also helps reduce the amount of boilerplate code needed for many common management capabilities, such as metering or monitoring.
 
@@ -98,7 +98,8 @@ type MemcachedSpec struct {
     Size int32 `json:"size"`
 }
 type MemcachedStatus struct {
-    // Nodes are the names of the memcached pods
+    // Nodes are the names of the memcached pods 
+    // +listType=set  
     Nodes []string `json:"nodes"`
 }
 ```
@@ -196,9 +197,13 @@ Build the memcached-operator image and push it to your registry. The following e
 ```sh
 $ operator-sdk build quay.io/<user>/memcached-operator:v0.0.1
 $ sed -i 's|REPLACE_IMAGE|quay.io/<user>/memcached-operator:v0.0.1|g' deploy/operator.yaml
-# On OSX use:
-$ sed -i "" 's|REPLACE_IMAGE|quay.io/<user>/memcached-operator:v0.0.1|g' deploy/operator.yaml
 $ docker push quay.io/<user>/memcached-operator:v0.0.1
+```
+
+**Note**
+If you are performing these steps on OSX, use the following `sed` command instead:
+```sh
+$ sed -i "" 's|REPLACE_IMAGE|quay.io/<user>/memcached-operator:v0.0.1|g' deploy/operator.yaml
 ```
 
 The above command will replace the string `REPLACE_IMAGE` with the `<image>:<tag>` built above. Afterwards, verify that your `operator.yaml` file was updated successfully.
@@ -253,7 +258,7 @@ Verify that the operator is running successfully by checking its logs.
 $ kubectl logs memcached-operator-7d76948766-nrcp7
 {"level":"info","ts":1567613603.7161574,"logger":"cmd","msg":"Go Version: go1.12.7"}
 {"level":"info","ts":1567613603.7163043,"logger":"cmd","msg":"Go OS/Arch: linux/amd64"}
-{"level":"info","ts":1567613603.7163143,"logger":"cmd","msg":"Version of operator-sdk: v0.10.0+git"}
+{"level":"info","ts":1567613603.7163143,"logger":"cmd","msg":"Version of operator-sdk: v0.12.0+git"}
 {"level":"info","ts":1567613603.7166178,"logger":"leader","msg":"Trying to become the leader."}
 {"level":"info","ts":1567613603.8369129,"logger":"leader","msg":"No pre-existing lock was found."}
 {"level":"info","ts":1567613603.8667152,"logger":"leader","msg":"Became the leader."}
@@ -405,7 +410,7 @@ $ kubectl delete -f deploy/service_account.yaml
 
 ## Reference implementation
 
-The above walkthrough follows the actual implementation process used to produce the `memcached-operator` in the SDK [samples repo][repo_sdk_samples_memcached].
+The above walkthrough follows a similar implementation process to the one used to produce the `memcached-operator` in the SDK [samples repo][repo_sdk_samples_memcached].
 
 ## Manage the operator using the Operator Lifecycle Manager
 
