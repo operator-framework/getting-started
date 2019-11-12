@@ -116,7 +116,7 @@ Also run the following command in order to automatically generate the OpenAPI va
 $ operator-sdk generate openapi
 ```
 
-You can see the changes applied in `deploy/crds/cache_v1alpha1_memcached_crd.yaml`
+You can see the changes applied in `deploy/crds/cache.example.com_memcacheds_crd.yaml`
 
 ## Add a new Controller
 
@@ -182,7 +182,7 @@ For a guide on Reconcilers, Clients, and interacting with resource Events, see t
 Before running the operator, the CRD must be registered with the Kubernetes apiserver:
 
 ```sh
-$ kubectl create -f deploy/crds/cache_v1alpha1_memcached_crd.yaml
+$ kubectl create -f deploy/crds/cache.example.com_memcacheds_crd.yaml
 ```
 
 Once this is done, there are two ways to run the operator:
@@ -315,10 +315,10 @@ You can use a specific kubeconfig via the flag `--kubeconfig=<path/to/kubeconfig
 
 ## Create a Memcached CR
 
-Create the example `Memcached` CR that was generated at `deploy/crds/cache_v1alpha1_memcached_cr.yaml`:
+Create the example `Memcached` CR that was generated at `deploy/crds/cache.example.com_v1alpha1_memcached_cr.yaml`:
 
 ```sh
-$ cat deploy/crds/cache_v1alpha1_memcached_cr.yaml
+$ cat deploy/crds/cache.example.com_v1alpha1_memcached_cr.yaml
 apiVersion: "cache.example.com/v1alpha1"
 kind: "Memcached"
 metadata:
@@ -326,7 +326,7 @@ metadata:
 spec:
   size: 3
 
-$ kubectl apply -f deploy/crds/cache_v1alpha1_memcached_cr.yaml
+$ kubectl apply -f deploy/crds/cache.example.com_v1alpha1_memcached_cr.yaml
 ```
 
 Ensure that the `memcached-operator` creates the deployment for the CR:
@@ -376,7 +376,7 @@ status:
 Change the `spec.size` field in the memcached CR from 3 to 4 and apply the change:
 
 ```sh
-$ cat deploy/crds/cache_v1alpha1_memcached_cr.yaml
+$ cat deploy/crds/cache.example.com_v1alpha1_memcached_cr.yaml
 apiVersion: "cache.example.com/v1alpha1"
 kind: "Memcached"
 metadata:
@@ -384,7 +384,7 @@ metadata:
 spec:
   size: 4
 
-$ kubectl apply -f deploy/crds/cache_v1alpha1_memcached_cr.yaml
+$ kubectl apply -f deploy/crds/cache.example.com_v1alpha1_memcached_cr.yaml
 ```
 
 Confirm that the operator changes the deployment size:
@@ -400,8 +400,8 @@ example-memcached    4         4         4            4           5m
 Delete the operator and its related resources:
 
 ```sh
-$ kubectl delete -f deploy/crds/cache_v1alpha1_memcached_cr.yaml
-$ kubectl delete -f deploy/crds/cache_v1alpha1_memcached_crd.yaml
+$ kubectl delete -f deploy/crds/cache.example.com_v1alpha1_memcached_cr.yaml
+$ kubectl delete -f deploy/crds/cache.example.com_memcacheds_crd.yaml
 $ kubectl delete -f deploy/operator.yaml
 $ kubectl delete -f deploy/role_binding.yaml
 $ kubectl delete -f deploy/role.yaml
