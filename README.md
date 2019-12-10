@@ -475,7 +475,7 @@ Hopefully, this guide was an effective demonstration of the value of the Operato
 [request_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg/reconcile#Request
 [result_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg/reconcile#Result
 [doc_client_api]: https://github.com/operator-framework/operator-sdk/blob/master/doc/user/client.md
-[repo_sdk_samples_memcached]: https://github.com/operator-framework/operator-sdk-samples/tree/master/memcached-operator/
+[repo_sdk_samples_memcached]: https://github.com/operator-framework/operator-sdk-samples/tree/master/go/memcached-operator/
 [mailing_list]: https://groups.google.com/forum/#!forum/operator-framework
 [memcached_csv]: https://github.com/operator-framework/operator-sdk/blob/master/test/test-framework/deploy/olm-catalog/memcached-operator/0.0.3/memcached-operator.v0.0.3.clusterserviceversion.yaml
 [testing-operators]: https://github.com/operator-framework/community-operators/blob/master/docs/testing-operators.md
