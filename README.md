@@ -69,13 +69,17 @@ The Manager will automatically register the scheme for all custom resources defi
 The Manager can restrict the namespace that all controllers will watch for resources:
 
 ```Go
-mgr, err := manager.New(cfg, manager.Options{Namespace: namespace})
+mgr, err := manager.New(cfg, manager.Options{
+	Namespace: namespace,
+})
 ```
 
 By default this will be the namespace that the operator is running in. To watch all namespaces leave the namespace option empty:
 
 ```Go
-mgr, err := manager.New(cfg, manager.Options{Namespace: ""})
+mgr, err := manager.New(cfg, manager.Options{
+	Namespace: "",
+})
 ```
 
 ## Add a new Custom Resource Definition
@@ -99,7 +103,6 @@ type MemcachedSpec struct {
 }
 type MemcachedStatus struct {
     // Nodes are the names of the memcached pods 
-    // +listType=set  
     Nodes []string `json:"nodes"`
 }
 ```
@@ -110,7 +113,7 @@ After modifying the `*_types.go` file always run the following command to update
 $ operator-sdk generate k8s
 ```
 
-Also run the following command in order to automatically generate the OpenAPI validations.
+Also run the following command in order to automatically generate the CRDs:
 
 ```sh
 $ operator-sdk generate crds
@@ -256,21 +259,24 @@ Verify that the operator is running successfully by checking its logs.
 
 ```sh
 $ kubectl logs memcached-operator-7d76948766-nrcp7
-{"level":"info","ts":1567613603.7161574,"logger":"cmd","msg":"Go Version: go1.12.7"}
-{"level":"info","ts":1567613603.7163043,"logger":"cmd","msg":"Go OS/Arch: linux/amd64"}
-{"level":"info","ts":1567613603.7163143,"logger":"cmd","msg":"Version of operator-sdk: v0.12.0+git"}
-{"level":"info","ts":1567613603.7166178,"logger":"leader","msg":"Trying to become the leader."}
-{"level":"info","ts":1567613603.8369129,"logger":"leader","msg":"No pre-existing lock was found."}
-{"level":"info","ts":1567613603.8667152,"logger":"leader","msg":"Became the leader."}
-{"level":"info","ts":1567613603.9393756,"logger":"cmd","msg":"Registering Components."}
-{"level":"info","ts":1567613603.9396026,"logger":"kubebuilder.controller","msg":"Starting EventSource","controller":"memcached-controller","source":"kind source: /, Kind="}
-{"level":"info","ts":1567613603.9398162,"logger":"kubebuilder.controller","msg":"Starting EventSource","controller":"memcached-controller","source":"kind source: /, Kind="}
-{"level":"info","ts":1567613604.0514739,"logger":"metrics","msg":"Metrics Service object created","Service.Name":"memcached-operator-metrics","Service.Namespace":"myproject"}
-{"level":"info","ts":1567613604.0976534,"logger":"cmd","msg":"Could not create ServiceMonitor object","error":"no ServiceMonitor registered with the API"}
-{"level":"info","ts":1567613604.0986068,"logger":"cmd","msg":"Install prometheus-operator in your cluster to create ServiceMonitor objects","error":"no ServiceMonitor registered with the API"}
-{"level":"info","ts":1567613604.0988326,"logger":"cmd","msg":"Starting the Cmd."}
-{"level":"info","ts":1567613604.2993534,"logger":"kubebuilder.controller","msg":"Starting Controller","controller":"memcached-controller"}
-{"level":"info","ts":1567613604.3995395,"logger":"kubebuilder.controller","msg":"Starting workers","controller":"memcached-controller","worker count":1}
+{"level":"info","ts":1580855834.104447,"logger":"cmd","msg":"Operator Version: 0.0.1"}
+{"level":"info","ts":1580855834.1044931,"logger":"cmd","msg":"Go Version: go1.13.6"}
+{"level":"info","ts":1580855834.104505,"logger":"cmd","msg":"Go OS/Arch: linux/amd64"}
+{"level":"info","ts":1580855834.1045163,"logger":"cmd","msg":"Version of operator-sdk: v0.15.1"}
+{"level":"info","ts":1580855834.1049826,"logger":"leader","msg":"Trying to become the leader."}
+{"level":"info","ts":1580855834.4423697,"logger":"leader","msg":"No pre-existing lock was found."}
+{"level":"info","ts":1580855834.447401,"logger":"leader","msg":"Became the leader."}
+{"level":"info","ts":1580855834.7494223,"logger":"controller-runtime.metrics","msg":"metrics server is starting to listen","addr":"0.0.0.0:8383"}
+{"level":"info","ts":1580855834.7497423,"logger":"cmd","msg":"Registering Components."}
+{"level":"info","ts":1580855835.3955405,"logger":"metrics","msg":"Metrics Service object created","Service.Name":"memcached-operator-metrics","Service.Namespace":"default"}
+{"level":"info","ts":1580855835.7000446,"logger":"cmd","msg":"Could not create ServiceMonitor object","error":"no ServiceMonitor registered with the API"}
+{"level":"info","ts":1580855835.7005095,"logger":"cmd","msg":"Install prometheus-operator in your cluster to create ServiceMonitor objects","error":"no ServiceMonitor registered with the API"}
+{"level":"info","ts":1580855835.7007008,"logger":"cmd","msg":"Starting the Cmd."}
+{"level":"info","ts":1580855835.7014875,"logger":"controller-runtime.manager","msg":"starting metrics server","path":"/metrics"}
+{"level":"info","ts":1580855835.702304,"logger":"controller-runtime.controller","msg":"Starting EventSource","controller":"memcached-controller","source":"kind source: /, Kind="}
+{"level":"info","ts":1580855835.803201,"logger":"controller-runtime.controller","msg":"Starting EventSource","controller":"memcached-controller","source":"kind source: /, Kind="}
+{"level":"info","ts":1580855835.9041016,"logger":"controller-runtime.controller","msg":"Starting Controller","controller":"memcached-controller"}
+{"level":"info","ts":1580855835.9044445,"logger":"controller-runtime.controller","msg":"Starting workers","controller":"memcached-controller","worker count":1}
 ```
 
 The following error will occur if your cluster was unable to pull the image:
@@ -293,12 +299,6 @@ Error from server (BadRequest): container "memcached-operator" in pod "memcached
 ### 2. Run locally outside the cluster
 
 This method is preferred during development cycle to deploy and test faster.
-
-Set the name of the operator in an environment variable:
-
-```sh
-export OPERATOR_NAME=memcached-operator
-```
 
 Run the operator locally with the default kubernetes config file present at `$HOME/.kube/config`:
 
@@ -402,11 +402,11 @@ Delete the operator and its related resources:
 
 ```sh
 $ kubectl delete -f deploy/crds/cache.example.com_v1alpha1_memcached_cr.yaml
-$ kubectl delete -f deploy/crds/cache.example.com_memcacheds_crd.yaml
 $ kubectl delete -f deploy/operator.yaml
 $ kubectl delete -f deploy/role_binding.yaml
 $ kubectl delete -f deploy/role.yaml
 $ kubectl delete -f deploy/service_account.yaml
+$ kubectl delete -f deploy/crds/cache.example.com_memcacheds_crd.yaml
 ```
 
 ## Reference implementation
@@ -433,7 +433,7 @@ The first step to leveraging OLM is to create a [Cluster Service Version][csv_de
 The Operator SDK CLI can generate CSV manifests via the following command:
 
 ```console
-$ operator-sdk olm-catalog gen-csv --csv-version 0.0.1 --update-crds
+$ operator-sdk generate csv --csv-version 0.0.1 --update-crds
 ```
 
 Several fields must be updated after generating the CSV. See the CSV generation doc for a list of [required fields][csv-fields], and the memcached-operator [CSV][memcached_csv] for an example of a complete CSV.
@@ -444,7 +444,10 @@ Several fields must be updated after generating the CSV. See the CSV generation 
 
 The next step is to ensure your project deploys correctly with OLM and runs as expected. Follow this [testing guide][testing-operators] to deploy and test your operator.
 
-**NOTE:** Also, check out operatorhub.io's [bundle build tool][operator-hub-io-bundle] as an alternative to using `operator-sdk olm-catalog gen-csv`.
+**NOTE:** Also, check out some of the new OLM integrations in operator-sdk:
+- [`operator-sdk olm`][sdk-olm-cli] to install and manage an OLM installation in your cluster.
+- [`operator-sdk run --olm`][sdk-run-cli] to run your operator using the CSV generated by `operator-sdk generate csv`.
+- [`operator-sdk bundle`][sdk-bundle-cli] to create and validate operator bundle images.
 
 ### Promoting operator standards
 
@@ -481,8 +484,10 @@ Hopefully, this guide was an effective demonstration of the value of the Operato
 [memcached_csv]: https://github.com/operator-framework/operator-sdk/blob/master/test/test-framework/deploy/olm-catalog/memcached-operator/0.0.3/memcached-operator.v0.0.3.clusterserviceversion.yaml
 [testing-operators]: https://github.com/operator-framework/community-operators/blob/master/docs/testing-operators.md
 [sdk-integration-with-olm-doc]: https://github.com/operator-framework/operator-sdk/blob/master/doc/proposals/sdk-integration-with-olm.md
+[sdk-olm-cli]: https://github.com/operator-framework/operator-sdk/blob/master/doc/cli/operator-sdk_olm.md
+[sdk-run-cli]: https://github.com/operator-framework/operator-sdk/blob/master/doc/cli/operator-sdk_run.md
+[sdk-bundle-cli]: https://github.com/operator-framework/operator-sdk/blob/master/doc/cli/operator-sdk_bundle.md
 [operator-hub-io]: https://operatorhub.io/ 
 [operator-hub-io-preview]: https://operatorhub.io/preview
-[operator-hub-io-bundle]: https://operatorhub.io/bundle
 [scorecard-doc]: https://github.com/operator-framework/operator-sdk/blob/master/doc/test-framework/scorecard.md
 [csv-fields]: https://github.com/operator-framework/operator-sdk/blob/master/doc/user/olm-catalog/generating-a-csv.md#csv-fields
