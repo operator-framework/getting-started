@@ -303,12 +303,13 @@ export OPERATOR_NAME=memcached-operator
 Run the operator locally with the default kubernetes config file present at `$HOME/.kube/config`:
 
 ```sh
-$ operator-sdk up local --namespace=default
-2018/09/30 23:10:11 Go Version: go1.10.2
-2018/09/30 23:10:11 Go OS/Arch: darwin/amd64
-2018/09/30 23:10:11 operator-sdk Version: 0.0.6+git
-2018/09/30 23:10:12 Registering Components.
-2018/09/30 23:10:12 Starting the Cmd.
+$ operator-sdk run --local --namespace=default
+INFO[0000] Running the operator locally in namespace default.
+{"level":"info","ts":1580761578.693055,"logger":"cmd","msg":"Operator Version: 0.0.1"}
+{"level":"info","ts":1580761578.6931021,"logger":"cmd","msg":"Go Version: go1.13.1"}
+{"level":"info","ts":1580761578.693109,"logger":"cmd","msg":"Go OS/Arch: darwin/amd64"}
+{"level":"info","ts":1580761578.693113,"logger":"cmd","msg":"Version of operator-sdk: v0.15.1"}
+...
 ```
 
 You can use a specific kubeconfig via the flag `--kubeconfig=<path/to/kubeconfig>`.
