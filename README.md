@@ -469,10 +469,10 @@ Hopefully, this guide was an effective demonstration of the value of the Operato
 [operator_sdk]: https://github.com/operator-framework/operator-sdk
 [operator_lifecycle_manager]: https://github.com/operator-framework/operator-lifecycle-manager
 [site_memcached]: https://memcached.org/
-[doc_sdk_user_guide]: https://github.com/operator-framework/operator-sdk/blob/master/doc/user-guide.md
+[doc_sdk_user_guide]: https://sdk.operatorframework.io/docs/contribution-guidelines/developer-guide/
 [doc_sdk_install_instr]: https://github.com/operator-framework/operator-sdk/blob/master/doc/user-guide.md#install-the-operator-sdk-cli
 [doc_olm_install_instr]: https://github.com/operator-framework/operator-lifecycle-manager/blob/master/doc/install/install.md
-[layout_doc]: https://github.com/operator-framework/operator-sdk/blob/master/doc/project_layout.md
+[layout_doc]: https://sdk.operatorframework.io/docs/golang/references/project-layout/
 [manager_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg/manager#Manager
 [controller_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg#hdr-Controller
 [memcached_controller]: https://github.com/operator-framework/operator-sdk/blob/master/example/memcached-operator/memcached_controller.go.tmpl
