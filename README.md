@@ -178,7 +178,7 @@ func (r *ReconcileMemcached) Reconcile(request reconcile.Request) (reconcile.Res
 }  
 ```
 
-For a guide on Reconcilers, Clients, and interacting with resource Events, see the [Kubebuilder Book][doc_kubebuilder_book].
+For a guide on Reconcilers, Clients, and interacting with resource Events, see the [Client API doc][doc_client_api].
 
 ## Build and run the operator
 
@@ -480,7 +480,7 @@ Hopefully, this guide was an effective demonstration of the value of the Operato
 [memcached_controller]: https://github.com/operator-framework/operator-sdk/blob/master/example/memcached-operator/memcached_controller.go.tmpl
 [request_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg/reconcile#Request
 [result_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg/reconcile#Result
-[doc_kubebuilder_book]: https://book-v1.book.kubebuilder.io/
+[doc_client_api]: https://sdk.operatorframework.io/docs/golang/references/client/
 [repo_sdk_samples_memcached]: https://github.com/operator-framework/operator-sdk-samples/tree/master/go/memcached-operator/
 [mailing_list]: https://groups.google.com/forum/#!forum/operator-framework
 [memcached_csv]: https://github.com/operator-framework/operator-sdk/blob/master/test/test-framework/deploy/olm-catalog/memcached-operator/0.0.3/memcached-operator.v0.0.3.clusterserviceversion.yaml
