@@ -304,7 +304,7 @@ This method is preferred during development cycle to deploy and test faster.
 Run the operator locally with the default kubernetes config file present at `$HOME/.kube/config`:
 
 ```sh
-$ operator-sdk run local
+$ operator-sdk run --local
 INFO[0000] Running the operator locally; watching namespace "default"
 {"level":"info","ts":1593777657.892013,"logger":"cmd","msg":"Operator Version: 0.0.1"}
 {"level":"info","ts":1593777657.892079,"logger":"cmd","msg":"Go Version: go1.14.4"}
