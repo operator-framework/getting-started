@@ -472,7 +472,7 @@ Hopefully, this guide was an effective demonstration of the value of the Operato
 [operator_lifecycle_manager]: https://github.com/operator-framework/operator-lifecycle-manager
 [site_memcached]: https://memcached.org/
 [doc_sdk_user_guide]: https://sdk.operatorframework.io/docs/contribution-guidelines/developer-guide/
-[doc_sdk_install_instr]: https://sdk.operatorframework.io/docs/install-operator-sdk/
+[doc_sdk_install_instr]: https://sdk.operatorframework.io/docs/installation/install-operator-sdk/
 [doc_olm_install_instr]: https://github.com/operator-framework/operator-lifecycle-manager/blob/master/doc/install/install.md
 [layout_doc]: https://sdk.operatorframework.io/docs/golang/references/project-layout/
 [manager_go_doc]: https://godoc.org/github.com/kubernetes-sigs/controller-runtime/pkg/manager#Manager
