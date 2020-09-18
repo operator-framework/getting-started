@@ -1,4 +1,6 @@
-# Getting Started
+# [DEPRECATED] Getting Started
+
+This project is deprecated. Documentation for the Operator Framework has moved to https://operatorframework.io/
 
 - [Overview](#overview)
 - [Build an operator using the Operator SDK](#build-an-operator-using-the-operator-sdk)
